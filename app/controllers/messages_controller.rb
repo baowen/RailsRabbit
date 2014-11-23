@@ -29,8 +29,6 @@ class MessagesController < ApplicationController
   # POST /messages.json
   def create
 
-    
-
     @message = Message.new(message_params)
 
     conn = Bunny.new(:automatically_recover => false)
@@ -44,6 +42,7 @@ class MessagesController < ApplicationController
 #    ch.default_exchange.publish(@message.text, :routing_key => q.name)
     ch.close
     conn.close
+
     respond_to do |format|
       if @message.save
         format.html { redirect_to @message, notice: 'Message was successfully created.' }
@@ -72,10 +71,15 @@ class MessagesController < ApplicationController
   # DELETE /messages/1
   # DELETE /messages/1.json
   def destroy
-    @message.destroy
+    
     respond_to do |format|
+
+    if @message.destroy
       format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
       format.json { head :no_content }
+    else 
+       format.html { redirect_to messages_url, notice: 'Message was NOT successfully destroyed.' }
+    end
     end
   end
 

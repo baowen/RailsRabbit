@@ -20,7 +20,7 @@ class RabbitClient
 
     @reply_queue.subscribe do |delivery_info, properties, payload|
       if properties[:correlation_id] == that.call_id
-        that.response =payload.to_i
+        that.response =payload.to_s
         that.lock.synchronize{that.condition.signal}
       end
     end
@@ -30,7 +30,7 @@ class RabbitClient
   def call(message)
     self.call_id = self.generate_uuid
 
-    @x.publish(message,
+    @x.publish(message.to_s,
       :routing_key    => @server_queue,
       :correlation_id => call_id,
       :reply_to       => @reply_queue.name)
@@ -61,9 +61,9 @@ class RabbitServer
 
     @q.subscribe(:block => true) do |delivery_info, properties, payload|
       s = payload.to_s
-      r = self.class.reverser(s)
-      puts s
-      @x.publish(r.to_s, :routing_key => properties.reply_to, :correlation_id => properties.correlation_id)
+#      r = self.class.reverser(s)
+      puts " [.] server message  #{s.to_s}"
+      @x.publish("response from server", :routing_key => properties.reply_to, :correlation_id => properties.correlation_id)
     end
   end
 
