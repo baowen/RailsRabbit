@@ -1,6 +1,8 @@
 require "bunny"
+require "rabbitmixin"
 
 class MessagesController < ApplicationController
+
   before_action :set_message, only: [:show, :edit, :update, :destroy]
 
   # GET /messages
@@ -26,10 +28,18 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.json
   def create
+
+    
+
     @message = Message.new(message_params)
-    conn = Bunny.new
+
+    conn = Bunny.new(:automatically_recover => false)
     conn.start
     ch = conn.create_channel
+
+    RabbitClient.new(ch, "rpc_queue")
+
+
     q = ch.queue("message")
     ch.default_exchange.publish(@message.text, :routing_key => q.name)
     conn.close
