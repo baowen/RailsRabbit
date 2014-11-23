@@ -37,11 +37,12 @@ class MessagesController < ApplicationController
     conn.start
     ch = conn.create_channel
 
-    RabbitClient.new(ch, "rpc_queue")
-
-
-    q = ch.queue("message")
-    ch.default_exchange.publish(@message.text, :routing_key => q.name)
+    client = RabbitClient.new(ch, "rpc_queue")
+    response = client.call(@message)
+    puts " [.] Got #{response}"
+#    q = ch.queue("message")
+#    ch.default_exchange.publish(@message.text, :routing_key => q.name)
+    ch.close
     conn.close
     respond_to do |format|
       if @message.save

@@ -47,5 +47,29 @@ class RabbitClient
     "#{rand}#{rand}#{rand}"
   end
 
+end
+
+class RabbitServer
+
+  def initialize(ch)
+    @ch = ch
+  end
+
+  def start(queue_name)
+    @q = @ch.queue(queue_name)
+    @x = @ch.default_exchange
+
+    @q.subscribe(:block => true) do |delivery_info, properties, payload|
+      s = payload.to_s
+      r = self.class.reverser(s)
+      puts s
+      @x.publish(r.to_s, :routing_key => properties.reply_to, :correlation_id => properties.correlation_id)
+    end
+  end
+
+  def self.reverser(s)
+    s
+  end
 
 end
+
