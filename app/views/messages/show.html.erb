@@ -1,9 +1,36 @@
-<p id="notice"><%= notice %></p>
 
+
+<html>
+<div class="container">
+<p id="notice"><%= notice %></p>
+</div>
+
+     <div class="container">
+      <h2>RabbitMQ message response page</h2>
+      <p> This page shows the message sent and the message received.  The message has been reversed by the server and sent back via a queue.</p>
+
+    </div>
+
+      <hr>
+      
+<div class="container">
 <p>
-  <strong>Text:</strong>
+  <strong>Message sent to:</strong>
   <%= @message.text %>
 </p>
 
-<%= link_to 'Edit', edit_message_path(@message) %> |
-<%= link_to 'Back', messages_path %>
+<p>
+  <strong>Response message from server:</strong>
+  <%= @message.response %>
+</p>
+        
+<%= link_to 'Send Another Message', new_message_path %>
+
+ </div>
+
+
+
+
+
+
+

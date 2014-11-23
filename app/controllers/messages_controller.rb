@@ -36,7 +36,8 @@ class MessagesController < ApplicationController
     ch = conn.create_channel
 
     client = RabbitClient.new(ch, "rpc_queue")
-    response = client.call(@message)
+    response = client.call(@message.text).to_s
+    @message.response = response.to_s
     puts " [.] Got #{response}"
 #    q = ch.queue("message")
 #    ch.default_exchange.publish(@message.text, :routing_key => q.name)
@@ -45,7 +46,7 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        format.html { redirect_to @message, notice: 'Message was successfully created.' }
+        format.html { redirect_to @message, notice: 'Message was successfully sent and received.' }
         format.json { render :show, status: :created, location: @message }
       else
         format.html { render :new }

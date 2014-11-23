@@ -63,7 +63,7 @@ class RabbitServer
       s = payload.to_s
 #      r = self.class.reverser(s)
       puts " [.] server message  #{s.to_s}"
-      @x.publish("response from server", :routing_key => properties.reply_to, :correlation_id => properties.correlation_id)
+      @x.publish(s.reverse, :routing_key => properties.reply_to, :correlation_id => properties.correlation_id)
     end
   end
 
