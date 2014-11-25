@@ -1,32 +1,35 @@
 
-
-<html>
 <div class="container">
 <p id="notice"><%= notice %></p>
 </div>
 
-     <div class="container">
-      <h2>RabbitMQ message response page</h2>
-      <p> This page shows the message sent and the message received.  The message has been reversed by the server and sent back via a queue.</p>
+<div class="container">
+  <h2>RabbitMQ message response page</h2>
+  <p> This page shows the message sent and the message received.  The message has been reversed by the server and sent back via a queue.</p>
+</div>
 
-    </div>
+ 
+<%= form_for(@message) do |f| %>
+<div class="container">
+  <div class="field">
+    <%= f.label "Request Sent to Server" %><br>
+    <%= f.text_area :text, class: "form-control", rows: "1", :disabled => true  %>
+  </div>
+  <p></p>
+  <div class="field">
+    <%= f.label "Response From Server" %><br>
+    <%= f.text_area :response, class: "form-control", rows: "1", :disabled => true  %>
+  </div>
+</div>
 
-      <hr>
+<% end %>
       
 <div class="container">
-<p>
-  <strong>Message sent to:</strong>
-  <%= @message.text %>
-</p>
-
-<p>
-  <strong>Response message from server:</strong>
-  <%= @message.response %>
-</p>
         
-<%= link_to 'Send Another Message', new_message_path %>
+  <hr>
 
- </div>
+  <%= link_to 'Send Another Message', new_message_path, :class => "btn btn-primary" %>
+</div>
 
 
 
