@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :messages
+  resources :messages, only: [:new, :show, :create]
 
   get 'welcome/index'
 
